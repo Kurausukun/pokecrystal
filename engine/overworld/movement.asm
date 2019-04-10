@@ -439,50 +439,53 @@ TurnHead:
 
 Movement_slow_step_down:
 	ld a, STEP_SLOW << 2 | DOWN
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_slow_step_up:
 	ld a, STEP_SLOW << 2 | UP
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_slow_step_left:
 	ld a, STEP_SLOW << 2 | LEFT
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_slow_step_right:
 	ld a, STEP_SLOW << 2 | RIGHT
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_step_down:
 	ld a, STEP_WALK << 2 | DOWN
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_step_up:
 	ld a, STEP_WALK << 2 | UP
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_step_left:
 	ld a, STEP_WALK << 2 | LEFT
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_step_right:
 	ld a, STEP_WALK << 2 | RIGHT
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_big_step_down:
 	ld a, STEP_BIKE << 2 | DOWN
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_big_step_up:
 	ld a, STEP_BIKE << 2 | UP
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_big_step_left:
 	ld a, STEP_BIKE << 2 | LEFT
-	jp NormalStep
+	jr Movement_do_step
 
 Movement_big_step_right:
 	ld a, STEP_BIKE << 2 | RIGHT
+Movement_do_step:
+	ld d, OBJECT_ACTION_STEP
+Movement_normal_step:
 	jp NormalStep
 
 Movement_turn_away_down:
@@ -660,11 +663,13 @@ TurnStep:
 	ret
 
 NormalStep:
+	push de
 	call InitStep
 	call UpdateTallGrassFlags
 	ld hl, OBJECT_ACTION
 	add hl, bc
-	ld [hl], OBJECT_ACTION_STEP
+	pop de
+	ld [hl], d
 
 	ld hl, OBJECT_NEXT_TILE
 	add hl, bc
